@@ -1,0 +1,48 @@
+{
+  "name": "mailboxjs",
+  "version": "1.0.0",
+  "description": "A simple library to send/receive mails by IMAP & SMTP",
+  "keywords": [
+    "simple",
+    "library",
+    "imap",
+    "smtp",
+    "mail",
+    "mails",
+    "mailbox",
+    "inbox",
+    "watch",
+    "watcher",
+    "manager",
+    "send",
+    "receive",
+    "get",
+    "delete",
+    "remove"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc-watch --onSuccess \"node ./lib/index.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vsdparibas",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "eslint": "^8.23.1",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vsdparibas/mailboxjs.git"
+  }
+}
