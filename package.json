@@ -20,15 +20,21 @@
     "delete",
     "remove"
   ],
+  "files": [
+    "lib/"
+  ],
   "main": "lib/index.js",
   "scripts": {
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "build": "tsc",
-    "dev": "tsc-watch --onSuccess \"node ./lib/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node ./lib/test.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "vsdparibas",
   "license": "ISC",
   "devDependencies": {
+    "@types/mailparser": "^3.4.0",
+    "@types/node": "^18.7.22",
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "eslint": "^8.23.1",
     "eslint-config-standard-with-typescript": "^23.0.0",
@@ -39,7 +45,11 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "chalk": "^4.1.2"
+    "@types/imapflow": "^1.0.10",
+    "chalk": "^4.1.2",
+    "emailjs": "^3.8.1",
+    "imapflow": "^1.0.108",
+    "mailparser": "^3.5.0"
   },
   "repository": {
     "type": "git",

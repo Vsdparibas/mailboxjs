@@ -1,6 +1,7 @@
 node_modules/
 src/
 lib/test.js
+lib/test.d.ts
 .eslintrc.json
 .prettierrc
 tsconfig.json
