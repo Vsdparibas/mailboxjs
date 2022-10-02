@@ -1,15 +1,12 @@
 import { SmtpConfig } from './interfaces/MailboxJsConfig';
 import {
-  MessageHeaders as EmailJsMessage,
   MessageAttachment,
+  MessageHeaders as EmailJsMessage,
   SMTPClient,
   SMTPConnectionOptions,
 } from 'emailjs';
 import { Context } from './MailboxJs';
-import { Message } from './interfaces/Message';
 import { Attachment } from './Attachment';
-import { existsSync, PathLike } from 'fs';
-import { Readable } from 'stream';
 
 export class SmtpManager {
   private context: Context;
@@ -32,9 +29,15 @@ export class SmtpManager {
     );
   }
 
-  public async send(message: Message): Promise<boolean | Error> {
+  public async send(
+    to: string,
+    subject: string,
+    text: string,
+    attachments?: Attachment[] | Attachment,
+    from?: string,
+  ): Promise<boolean | Error> {
     return new Promise((resolve, reject) => {
-      const msg = this.messageToMsg(message);
+      const msg = this.getMsg(to, subject, text, attachments, from);
       this.client.send(msg, (err) => {
         if (err) return reject(err);
         resolve(true);
@@ -46,53 +49,56 @@ export class SmtpManager {
     });
   }
 
-  private messageToMsg(message: Message): EmailJsMessage {
-    let attachment = undefined;
-    if (message.attachments) {
-      attachment = message.attachments.map(
-        (attachment): MessageAttachment =>
-          this.attachmentToMsgAttachment(attachment),
-      );
-    }
-    return {
-      from: message.from,
-      to: message.to,
-      subject: message.subject,
-      text: message.text,
-      attachment,
-    };
+  public async sendHtml(
+    to: string,
+    subject: string,
+    text: string,
+    html: string,
+    attachments?: Attachment[] | Attachment,
+    from?: string,
+  ): Promise<boolean | Error> {
+    return new Promise((resolve, reject) => {
+      const msg = this.getMsg(to, subject, text, attachments, from);
+      const attachmentHtml: MessageAttachment = {
+        data: html,
+        alternative: true,
+      };
+      if (!msg.attachment) {
+        msg.attachment = [attachmentHtml];
+      } else {
+        if (Array.isArray(msg.attachment)) {
+          msg.attachment.push(attachmentHtml);
+        } else {
+          msg.attachment = [attachmentHtml, msg.attachment];
+        }
+      }
+      this.client.send(msg, (err) => {
+        if (err) return reject(err);
+        resolve(true);
+        this.context.logger.log(
+          `Sending mail from <${this.context.config.user}>`,
+          'SMTP',
+        );
+      });
+    });
   }
 
-  private attachmentToMsgAttachment(attachment: Attachment): MessageAttachment {
-    const { data, path, stream } = this.getDataForAttachment(attachment.data);
-    return {
-      data,
-      path,
-      stream,
-      name: attachment.name,
-      type: attachment.type,
-      charset: attachment.charset,
-      encoded: attachment.encoded,
-    };
-  }
-
-  private getDataForAttachment(incomingData: PathLike | Readable | string) {
-    let stream: Readable | undefined;
-    let path: PathLike | undefined;
-    let data: string | undefined;
-    if (incomingData instanceof Readable) {
-      stream = incomingData;
-    } else if (existsSync(incomingData)) {
-      path = incomingData;
-    } else if (typeof incomingData === 'string') {
-      data = incomingData;
-    } else {
-      data = '';
+  private getMsg(
+    to: string,
+    subject: string,
+    text: string,
+    attachments?: Attachment[] | Attachment,
+    from?: string,
+  ): EmailJsMessage {
+    if (!from) {
+      from = `${this.context.config.name} <${this.context.config.user}>`;
     }
     return {
-      stream,
-      path,
-      data,
+      from,
+      to,
+      subject: subject,
+      text: text,
+      attachment: attachments,
     };
   }
 }

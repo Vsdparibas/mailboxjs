@@ -11,6 +11,7 @@ export interface ImapConfig {
 }
 
 export interface MailboxJsConfig {
+  name: string;
   user: string;
   password: string;
   smtp: SmtpConfig;

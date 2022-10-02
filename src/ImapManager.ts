@@ -11,10 +11,10 @@ import {
   ImapFlowOptions,
 } from 'imapflow';
 import { ImapConfig } from './interfaces/MailboxJsConfig.js';
-import { Mail } from './Mail.js';
 import { UidsList } from './interfaces/UidsList.js';
 import { uidsAndMailsToUids } from './utils.js';
 import { EventEmitter } from 'stream';
+import { Mail } from './Mail';
 
 const DEFAULT_RESTART_INTERVAL = 5000;
 const DEFAULT_MAILBOXES_INTERVAL = 5000;

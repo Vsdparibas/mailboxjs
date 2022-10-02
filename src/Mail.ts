@@ -14,25 +14,8 @@ import { Mailbox } from './Mailbox';
  * @param {number} uid - Unique id of the mail
  * @param {number} seq - Sequence number of the mail
  * @param {Mailbox} mailbox - Mailbox where the mail is
- * @param {Attachment[]} attachments - Array of attachments
- * @param {Headers} headers -
- * @param {HeaderLines} headerLines -
- * @param {string | false} html -
- * @param {string | undefined} text -
- * @param {string | undefined} textAsHtml -
- * @param {string | undefined} subject - Subject of the mail
- * @param {string[] | string | undefined} references -
- * @param {Date | undefined} date -
- * @param {AddressObject | AddressObject[] | undefined} to -
- * @param {AddressObject | undefined} from -
- * @param {AddressObject | AddressObject[] | undefined} cc -
- * @param {AddressObject | AddressObject[] | undefined} bcc -
- * @param {AddressObject | undefined} replyTo -
- * @param {string | undefined} messageId -
- * @param {string | undefined} inReplyTo -
- * @param {'norma' | 'low' | 'high' | undefined} priority -
  */
-export class Mail {
+export class Mail implements ParsedMail {
   private readonly imap: ImapManager;
   uid: number;
   seq: number;

@@ -4,14 +4,14 @@ import { ImapManager } from './ImapManager';
 import { Logger } from './Logger';
 import { Mailbox } from './Mailbox';
 import { UidsList } from './interfaces/UidsList';
-import { Mail } from './Mail';
 import {
   CopyResponseObject,
   MailboxCreateResponse,
   MailboxDeleteResponse,
   MailboxRenameResponse,
 } from 'imapflow';
-import { Message } from './interfaces/Message';
+import { Mail } from './Mail';
+import { Attachment } from './Attachment';
 
 export interface Context {
   config: MailboxJsConfig;
@@ -58,7 +58,7 @@ export class MailboxJs {
   /**
    * Event listener for MailboxJS
    * @param {'mail' | 'delete'} event - Event you want to listen to
-   * @param {function(Mail | uid):void} callback - Function to call when event triggered (give you an email for 'mail' event and uid for 'delete' event)
+   * @param {Function} callback - Function to call when event triggered (give you an email for 'mail' event and uid for 'delete' event)
    */
   public on(
     event: 'mail' | 'delete',
@@ -78,10 +78,40 @@ export class MailboxJs {
 
   /**
    * Send a mail
-   * @param {Message} msg - Mail informations to send
+   * @param {string} to - Receiver identity
+   * @param {string} subject - Subject of the mail
+   * @param {string} text - Content text of the mail
+   * @param {Attachment[]} attachments - Mail attachments
+   * @param {string} from - Sender identity
    */
-  public send(msg: Message) {
-    this.smtp && this.smtp.send(msg);
+  public send(
+    to: string,
+    subject: string,
+    text: string,
+    attachments?: Attachment[] | Attachment,
+    from?: string,
+  ) {
+    this.smtp && this.smtp.send(to, subject, text, attachments, from);
+  }
+
+  /**
+   * Send a html mail
+   * @param {string} to - Receiver identity
+   * @param {string} subject - Subject of the mail
+   * @param {string} text - Content text of the mail
+   * @param {string} html - Content html of the mail
+   * @param {Attachment[] | Attachment} attachments - Mail attachments
+   * @param {string} from - Sender identity
+   */
+  public sendHtml(
+    to: string,
+    subject: string,
+    text: string,
+    html: string,
+    attachments?: Attachment[] | Attachment,
+    from?: string,
+  ) {
+    this.smtp && this.smtp.sendHtml(to, subject, text, html, attachments, from);
   }
 
   /**
